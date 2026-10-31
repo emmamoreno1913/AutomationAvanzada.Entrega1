@@ -1,0 +1,242 @@
+{
+  "name": "Entrega 1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -264,
+        232
+      ],
+      "id": "084b7aaa-e70f-4375-8e78-d5096eb5b1db",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -624,
+        0
+      ],
+      "id": "6ce1f4fd-0eb1-4079-a8ea-6e31af82ee46",
+      "name": "Mensaje Cliente",
+      "webhookId": "fd5705db-d278-4f85-953e-48062a0fe0e5"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Sos el asistente comercial virtual de TechSolutions, una empresa dedicada a la venta de productos tecnológicos.\nTu función es brindar atención al cliente, responder consultas comerciales y proporcionar información precisa sobre los productos disponibles.\n\nObjetivos:\n-Comprender las necesidades y consultas de los clientes.\n-Informar sobre productos, precios, características y disponibilidad.\n-Utilizar las herramientas disponibles para consultar información actualizada.\n-Brindar respuestas claras, útiles y profesionales.\nDerivar a un asesor humano cuando la consulta requiera intervención personal.\n\nUso de herramientas:\nCuando un cliente consulte por precios, stock, características o disponibilidad de productos, utilizá Google Sheets para recuperar la información correspondiente.\nNo respondas sobre precios o disponibilidad basándote en suposiciones o conocimientos generales.\nSi no encontrás el producto o el dato solicitado, informá que no disponés de esa información y ofrecé derivar la consulta a un asesor.\n\nRestricciones:\nNo inventes productos, precios, características ni cantidades de stock.\nNo confirmes compras ni realices transacciones.\nNo modifiques información de la base de datos.\nNo compartas información interna de la empresa.\nNo prometas fechas de entrega que no estén verificadas.\n\nEstilo de comunicacion: \n-Respondé exclusivamente sobre lo que el cliente pregunta ya sea precio, stock disponible.\n-No agregues información comercial adicional que el cliente no haya solicitado.\n-Utilizá un lenguaje profesional, cordial, claro y directo.\n-Evitá expresiones ambiguas y giros de lenguaje inclusivo.\n-Respondé siempre en español.\n-Adaptá la extensión de las respuestas a la necesidad del cliente.\n\nCriterio de derivación:\nSi el cliente solicita hablar con una persona, presenta un reclamo o realiza una consulta que no podés resolver con la información disponible, indicá que su caso requiere atención de un asesor humano.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "74d9e7b9-14fb-4a90-9b46-1998ac211dab",
+      "name": "Asistente Comercial"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -392,
+        232
+      ],
+      "id": "3b25e13d-078d-44ed-88a3-fac9449ad9a0",
+      "name": "Cerebro",
+      "credentials": {
+        "groqApi": {
+          "id": "rioqxL8Dt9wOq6TD",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Herramienta de consulta del catálogo comercial de TechSolutions.\nEsta herramienta permite consultar la base de datos de productos almacenada en Google Sheets y recuperar información comercial actualizada.\nDebe utilizarse obligatoriamente cuando un cliente realice consultas relacionadas con:\n-Precios: cuando solicite conocer el valor de un producto.\n-Disponibilidad: cuando pregunte si un producto se encuentra disponible.\n-Stock: cuando consulte las cantidades existentes.\n-Características: cuando necesite conocer especificaciones técnicas de un producto.\n\nEl agente debe identificar el producto solicitado y utilizar esta herramienta para recuperar los datos correspondientes.\nDebe responder utilizando exclusivamente la información obtenida de la planilla.\nSi el producto no existe o no se encuentra información suficiente, debe comunicarlo claramente al cliente y ofrecer derivar la consulta a un asesor humano.\nNo debe inventar precios, cantidades, características ni disponibilidad.\nEsta herramienta es de consulta. No debe utilizarse para modificar, eliminar o agregar registros.",
+        "documentId": {
+          "__rl": true,
+          "value": "1wZ3MBwC6hPEmi8fSKbEVFDFCprj2SieAW0L_az0OaqE",
+          "mode": "list",
+          "cachedResultName": "Catalogo_TechSolutions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wZ3MBwC6hPEmi8fSKbEVFDFCprj2SieAW0L_az0OaqE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Productos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wZ3MBwC6hPEmi8fSKbEVFDFCprj2SieAW0L_az0OaqE/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        240
+      ],
+      "id": "bdbc11ad-7821-43d7-9ba4-7d75c10d0c8c",
+      "name": "Catalogo_TechSolutions",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ztkQreTIqwAAgqOy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "moreno.emmanuel1913@gmail.com",
+        "subject": "Reporte de atención automatizada - TechSolutions",
+        "emailType": "text",
+        "message": "=REPORTE DE ATENCIÓN AUTOMATIZADA - TECHSOLUTIONS  \n\nConsulta recibida: {{ $('Mensaje Cliente').item.json.chatInput }}\n\nRespuesta generada: {{ $json.output }}\n\nEstado: Procesamiento completado.\n\nSupervisión: Revisar la respuesta generada y verificar si requiere intervención humana.  \n\nEste reporte fue generado automáticamente por el sistema de atención inteligente de TechSolutions.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "0ef8bc3c-6e28-4948-8383-7ac60780f4ff",
+      "name": "Mensaje a Responsable",
+      "webhookId": "95939021-3627-4cf0-bc49-ea7829babffe",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PQbRXqOSH9K9YmHm",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Ingreso de consulta de cliente sobre nuestros productos",
+        "height": 80,
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -656,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "177ef3c2-eca9-4e6e-a2e8-f7796423711d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "El agente de IA recibe, analiza y confecciona una respuesta por medio de su razonamiento, verificando y extrajendo informacion del sheet",
+        "height": 112,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -336,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "3354448a-3aaf-4c60-80ad-49aa83c5571c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Por medio de un email, se informa al encargado del local sobre las consultas/ pedidos de los clientes.",
+        "height": 112,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "98b73d3e-5169-415f-a1c4-8fcbb0acf300",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Asistente Comercial",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje Cliente": {
+      "main": [
+        [
+          {
+            "node": "Asistente Comercial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asistente Comercial": {
+      "main": [
+        [
+          {
+            "node": "Mensaje a Responsable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerebro": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Asistente Comercial",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Catalogo_TechSolutions": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente Comercial",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "dfb800e8-5f24-4dde-a8bf-4f070ad0d6cb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "21ac94651d42a543b13aefed859fc2282f140871bbb737d6f94b9ebd180b8398"
+  },
+  "nodeGroups": [],
+  "id": "rt1WsOWz0cmLsLx7",
+  "tags": []
+}
